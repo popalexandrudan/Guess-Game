@@ -15,30 +15,44 @@ let score = 20;
 let highScore = 0;
 
 let generateRandomNumber = () => {
-  randomNumber = Math.floor(Math.random() * 20 + 1);
+  randomNumber = Math.trunc(Math.random() * 20 + 1);
   return randomNumber;
 };
 
 generateRandomNumber();
+console.log(generateRandomNumber());
+
+let decreaseScore = () => {
+  score--;
+  scoreEl.textContent = score;
+};
+
+const displayMessage = message => {
+  informationEl.textContent = message;
+};
 
 let checkNumber = () => {
-  if (userInputNumber.value == randomNumber) {
-    randomNumberEl.textContent = userInputNumber.value;
-    informationEl.textContent = 'Correct Number !';
+  let inputNumber = userInputNumber.value;
+  if (!Number(inputNumber)) {
+    displayMessage('You must enter a number must be between 1 and 20 !');
+  } else if (Number(inputNumber) < 0 || Number(inputNumber) > 20) {
+    informationEl.textContent = 'Number must be between 1 and 20 !';
+  } else if (inputNumber == randomNumber) {
+    randomNumberEl.textContent = inputNumber;
+    displayMessage('Correct Number !');
     bodyEl.style.backgroundColor = 'green';
     if (highScore < score) {
       highScore = score;
       highScoreEl.textContent = highScore;
     }
-  } else if (userInputNumber.value < randomNumber) {
-    informationEl.textContent = 'To low !';
-    score--;
-    scoreEl.textContent = score;
-  } else if (userInputNumber.value > randomNumber) {
-    informationEl.textContent = 'To high !';
-    score--;
-    scoreEl.textContent = score;
+  } else if (inputNumber < randomNumber) {
+    displayMessage('To low !');
+    decreaseScore();
+  } else if (inputNumber > randomNumber) {
+    displayMessage('To high !');
+    decreaseScore();
   }
+  console.log(score);
 };
 
 checkButtonEl.addEventListener('click', () => {
@@ -46,6 +60,7 @@ checkButtonEl.addEventListener('click', () => {
 });
 
 let reset = () => {
+  displayMessage('Start guessing...');
   randomNumberEl.textContent = '?';
   userInputNumber.value = '';
   bodyEl.style.backgroundColor = 'black';
